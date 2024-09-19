@@ -15,7 +15,9 @@ export default function NavBar() {
         </h1>
         <div className="flex flex-row justify-center sm:justify-evenly align-middle gap-4 text-white text-4xl lg:text-5xl">
           <Link className="text-white/90 hover:text-white" href="https://www.linkedin.com/in/nico-airoldi-23431a17a/"> <FaLinkedin /> </Link>
-          <Link className="text-white/90 hover:text-white" href="https://github.com/nairoldi"> <FaGithub/> </Link>
+					<Link className="text-white/90 hover:text-white" href="https://github.com/nairoldi"> <FaGithub /> </Link>
+					<Link href="/auth/signup" className="text-white/90 hover:text-white text-xl"> Signup </Link>
+					<Link href="/auth/login" className="text-white/90 hover:text-white text-xl"> Login </Link>
         </div>
 			</div>
 		</nav>

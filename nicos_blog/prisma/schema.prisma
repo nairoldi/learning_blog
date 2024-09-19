@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
 }
 
@@ -18,13 +18,13 @@ datasource db {
 model User {
   id       String    @id @default(cuid())
   name     String?
-  email    String?
+  email    String    @unique
+  pass     String
   //emailVerified DateTime?
   role     Role      @default(USER) // Added role field
   posts    Post[] // One-to-many relationship with posts
   comments Comment[] // One-to-many relationship with comments
-  sessions Session[]
-  Page     Page[]
+  Pages    Page[]
 }
 
 model Page {
@@ -60,15 +60,6 @@ model Comment {
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   authorId  String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
