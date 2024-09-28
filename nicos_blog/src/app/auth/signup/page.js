@@ -18,16 +18,27 @@ export default function SignupPage() {
 			return;
 		}
 
-		const res = await fetch("/auth/signup", {
-			method: "POST",
-			body: JSON.stringify({ email, password }),
-			headers: { "Content-Type": "application/json" },
-		});
+		try {
+			console.log("Attempting to sign up:", email);
+			console.log("Sending request to: /api/auth/signup");
+			const res = await fetch("/api/auth/signup", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ email, password }),
+			});
 
-		if (res.ok) {
-			router.push("/auth/login");
-		} else {
-			alert("Signup failed");
+			console.log("Signup response status:", res.status);
+			const data = await res.json();
+			console.log("Signup response data:", data);
+
+			if (res.ok) {
+				router.push("/auth/login");
+			} else {
+				setError(data.error || "Signup failed");
+			}
+		} catch (error) {
+			console.error("Signup error:", error);
+			setError("An unexpected error occurred");
 		}
 	};
 
@@ -36,8 +47,8 @@ export default function SignupPage() {
 			<div className="bg-slate-900 p-8 rounded-lg shadow-lg max-w-md w-full">
 				<h1 className="text-4xl text-white font-bold text-center mb-6">
 					Signup
-        </h1>
-         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+				</h1>
+				{error && <p className="text-red-500 text-center mb-4">{error}</p>}
 				<form onSubmit={handleSubmit} className="space-y-6">
 					<div>
 						<label className="block text-white text-sm font-bold mb-2">
@@ -64,18 +75,18 @@ export default function SignupPage() {
 							placeholder="Enter your password"
 							required
 						/>
-          </div>
-          <div>
-            <label className="block text-white text-sm font-bold mb-2">Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-3 border border-slate-700 rounded-lg bg-slate-700 text-white focus:outline-none focus:border-indigo-500"
-              placeholder="Confirm your password"
-              required
-            />
-          </div>
+					</div>
+					<div>
+						<label className="block text-white text-sm font-bold mb-2">Confirm Password</label>
+						<input
+							type="password"
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
+							className="w-full p-3 border border-slate-700 rounded-lg bg-slate-700 text-white focus:outline-none focus:border-indigo-500"
+							placeholder="Confirm your password"
+							required
+						/>
+					</div>
 					<button
 						type="submit"
 						className="w-full bg-indigo-500 text-white font-bold py-3 rounded-lg hover:bg-indigo-600 transition duration-300"
