@@ -12,57 +12,24 @@ export const authOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        console.log("Authorize function called with email:", credentials?.email);
-        
-        // Validate input
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required");
-        }
-
-        try {
-          // Find user in database
-          const user = await prisma.user.findUnique({
-            where: { email: credentials.email }
-          });
-
-          console.log("User found:", user ? "Yes" : "No");
-
-          if (!user) {
-            throw new Error("No user found with this email");
-          }
-
-          console.log("Stored hashed password:", user.pass ? "Exists" : "Missing");
-
-          if (!user.pass) {
-            throw new Error("User account is not properly set up");
-          }
-
-          // Validate password
-          const isPasswordValid = await compare(credentials.password, user.pass);
-          console.log("Password valid:", isPasswordValid);
-
-          if (!isPasswordValid) {
-            throw new Error("Invalid password");
-          }
-
+        const user = await getUserByEmail(credentials.email); // Fetch user from DB
+        if (user && await verifyPassword(credentials.password, user.pass)) {
           console.log("Authentication successful for user:", user.email);
-
-          // Return user data for session
           return {
             id: user.id,
             email: user.email,
             role: user.role,
           };
-        } catch (error) {
-          console.error("Error in authorize function:", error);
-          throw error; // Re-throw the error to be handled by NextAuth
         }
+        return null; // Return null if authentication fails
       }
     })
   ],
   callbacks: {
     // Customize JWT token
     async jwt({ token, user }) {
+      console.log("JWT Callback called with token:", token);
+      console.log("JWT Callback - User:", user);
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -72,6 +39,7 @@ export const authOptions = {
     },
     // Customize session object
     async session({ session, token }) {
+      console.log("Session Callback - Token:", token);
       if (token && session.user) {
         session.user.id = token.id;
         session.user.email = token.email;

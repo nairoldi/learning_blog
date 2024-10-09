@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from 'next/navigation';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 export default function NavAuthButtons() {
   // Get session data and status
@@ -34,7 +35,7 @@ export default function NavAuthButtons() {
         onClick={handleSignOut} 
         className="text-white/90 hover:text-white text-xl"
       >
-        Logout
+        <FaSignOutAlt className="text-4xl" />
       </button>
     );
   }

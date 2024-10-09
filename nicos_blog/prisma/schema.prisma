@@ -36,6 +36,9 @@ model Page {
   updatedAt DateTime @updatedAt
   authorId  String
   author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Page?    @relation("PageToPage", fields: [parentId], references: [id])
+  children  Page[]   @relation("PageToPage")
 }
 
 model Post {

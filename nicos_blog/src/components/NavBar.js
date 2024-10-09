@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import NavAuthButtons from './NavAuthButtons';
-import { FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaBook } from 'react-icons/fa';
 
 /**
  * NavBar is the navigation bar component that is displayed at the top of the application.
@@ -20,6 +20,7 @@ export default function NavBar() {
 				<div className="flex flex-row justify-center sm:justify-evenly align-middle gap-4 text-white text-4xl lg:text-5xl">
 					<Link className="text-white/90 hover:text-white" href="https://www.linkedin.com/in/nico-airoldi-23431a17a/"><FaLinkedin /></Link>
 					<Link className="text-white/90 hover:text-white" href="https://github.com/nairoldi"><FaGithub /></Link>
+					<Link className="text-white/90 hover:text-white" href="/blog"><FaBook /></Link>
 					<NavAuthButtons />
 				</div>
 			</div>
